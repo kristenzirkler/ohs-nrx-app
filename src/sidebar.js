@@ -1,8 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
+/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-
 import {
   CalendarIcon,
   ChartBarIcon,
@@ -22,19 +20,24 @@ const navigation = [
   { name: 'Documents', href: '#', icon: InboxIcon, current: false },
   { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
 ]
-const stats = [
-  { name: 'Total Subscribers', stat: '71,897' },
-  { name: 'Avg. Open Rate', stat: '58.16%' },
-  { name: 'Avg. Click Rate', stat: '24.57%' },
-]
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function App() {
+export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
     <>
+      {/*
+        This example requires updating your template:
+
+        ```
+        <html class="h-full bg-gray-100">
+        <body class="h-full">
+        ```
+      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="fixed inset-0 flex z-40 md:hidden" onClose={setSidebarOpen}>
@@ -204,24 +207,7 @@ export default function App() {
                 <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
               </div>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-  
-
-
-
-  
-    <div>
-      <h3 className="text-lg leading-6 font-medium text-gray-900">Last 30 days</h3>
-      <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-        {stats.map((item) => (
-          <div key={item.name} className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-            <dt className="text-sm font-medium text-gray-500 truncate">{item.name}</dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">{item.stat}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-
-
+                {/* Replace with your content */}
                 <div className="py-4">
                   <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" />
                 </div>
@@ -232,5 +218,5 @@ export default function App() {
         </div>
       </div>
     </>
-  );
+  )
 }
