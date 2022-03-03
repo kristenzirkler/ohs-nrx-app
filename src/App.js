@@ -1,31 +1,34 @@
 import logo from './logo.svg';
 import './App.css';
 import { Fragment, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, Transition, Switch } from '@headlessui/react'
 
 import {
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
   HomeIcon,
+  ClipboardListIcon,
+  CalendarIcon,
+  PuzzleIcon,
+  FolderIcon,
   InboxIcon,
   MenuIcon,
-  UsersIcon,
   XIcon,
 } from '@heroicons/react/outline'
 
 const navigation = [
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
+  { name: 'My Pak', href: '#', icon: PuzzleIcon, current: false },
+  { name: 'Questionnaire', href: '#', icon: ClipboardListIcon, current: false },
+  { name: 'History', href: '#', icon: CalendarIcon, current: false },
 ]
 const stats = [
   { name: 'Total Subscribers', stat: '71,897' },
   { name: 'Avg. Open Rate', stat: '58.16%' },
   { name: 'Avg. Click Rate', stat: '24.57%' },
+]
+const alertStates = [
+  { id: '1new', headline: 'Welcome! Please schedule bloodwork appointment.', text: 'Our program is based on your nutrition needs. Please schedule bloodwork to get your customized nutrition pak.' },
+  { id: '2waitingresults', headline: 'Waiting on Results', text: 'Waiting for results from your bloodwork.' },
+  { id: '3processing', headline: 'Processing', text: 'Processing your bloodwork.' },
 ]
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -33,6 +36,8 @@ function classNames(...classes) {
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [enabled, setEnabled] = useState(false)
+
   return (
     <>
       <div>
@@ -204,23 +209,19 @@ export default function App() {
                 <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
               </div>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-  
-
-
-
-  
-    <div>
-      <h3 className="text-lg leading-6 font-medium text-gray-900">Last 30 days</h3>
-      <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-        {stats.map((item) => (
-          <div key={item.name} className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-            <dt className="text-sm font-medium text-gray-500 truncate">{item.name}</dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">{item.stat}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-
+                {alertStates.map((alertState) => (
+                  <div key={alertState.id} className="bg-white shadow sm:rounded-lg mb-5">
+                    <div className="px-4 py-5 sm:p-6">
+                      <div className="sm:flex sm:items-start sm:justify-between">
+                        <div className="max-w-xl">
+                          <h3 className="text-lg leading-6 font-medium text-gray-900">{alertState.headline}</h3>
+                          <p className="text-sm text-gray-500">{alertState.text}</p>
+                        </div>
+                        <ApptSwitch isNew={true} type={alertState.id} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
 
                 <div className="py-4">
                   <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" />
@@ -233,4 +234,72 @@ export default function App() {
       </div>
     </>
   );
+}
+function ApptSwitch(props) {
+  const isNew = props.isNew;
+  const type = props.type;
+  if (type == '1new') {
+    return <ApptSwitchToggle enabled={false}  />;
+  }
+  if (type == '2waitingresults') {
+    return (
+      <>
+      <span className="flex p-2 rounded-lg bg-indigo-800">
+        <CalendarIcon className="w-5 h-5 text-white" aria-hidden="true" />
+      </span>
+      </>
+    );
+  }
+  return '';
+}
+function ApptSwitchToggle(props) {
+  return (
+    <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
+    <Switch
+      checked={props.enabled}
+      //onChange={setEnabled}
+      className={classNames(
+        props.enabled ? 'bg-indigo-600' : 'bg-gray-200',
+        'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+      )}
+    >
+      <span className="sr-only">Appointment Scheduled?</span>
+      <span
+        className={classNames(
+          props.enabled ? 'translate-x-5' : 'translate-x-0',
+          'pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
+        )}
+      >
+        <span
+          className={classNames(
+            props.enabled ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200',
+            'absolute inset-0 h-full w-full flex items-center justify-center transition-opacity'
+          )}
+          aria-hidden="true"
+        >
+          <svg className="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 12 12">
+            <path
+              d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        <span
+          className={classNames(
+            props.enabled ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100',
+            'absolute inset-0 h-full w-full flex items-center justify-center transition-opacity'
+          )}
+          aria-hidden="true"
+        >
+          <svg className="h-3 w-3 text-indigo-600" fill="currentColor" viewBox="0 0 12 12">
+            <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />
+          </svg>
+        </span>
+      </span>
+    </Switch>
+    </div>
+    )
 }
